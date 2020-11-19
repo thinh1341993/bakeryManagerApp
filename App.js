@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 
 import CreateProduct from './app/scr/07-create-product/create-product'
+import CreateCategory from './app/scr/10-create-category/create-category'
 
 const App: () => React$Node = () => {
   return (
@@ -26,7 +27,7 @@ const App: () => React$Node = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           > */}
-          <CreateProduct/>
+          <CreateCategory/>
         {/* </ScrollView>
       </SafeAreaView> */}
     </>

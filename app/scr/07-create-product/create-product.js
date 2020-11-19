@@ -6,15 +6,18 @@ import { useNavigation } from "@react-navigation/native"
 
 // import { connect, useDispatch } from 'react-redux'
 
-import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native"
+import { View, Text, ScrollView, TouchableOpacity, Image, Modal } from "react-native"
 import { Picker } from '@react-native-picker/picker';
+import { color, distance, fontSize, typography } from "../../theme"
 // import ModalDropdown from 'react-native-modal-dropdown';
 import { Icon, Input } from "react-native-elements"
-import { color } from "../../theme"
+
+import ImagePicker from 'react-native-image-picker';
 
 
-
-
+const options = {
+    title: 'Select Image',
+  };
 
 
 
@@ -24,17 +27,68 @@ const createProduct = () => {
     const [price, setPrice] = useState(0)
     const [inventory, setInventory] = useState(0)
     const [pickerValue, setPickerValue] = useState('Không danh mục')
+    const [imageProduct, setImageProduct] = useState('')
+    const [linkImage, setLinkImage] = useState('')
+    const [selectImage, setSelectImage] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false);
+    
     //action
     const back = () => {
         console.log('back')
     }
 
     const selectFileImage = () => {
-
+        ImagePicker.launchImageLibrary(options, (response) => {
+            console.log('Response = ', response);
+           
+            if (response.didCancel) {
+              console.log('User cancelled image picker');
+            } else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+              console.log('User tapped custom button: ', response.customButton);
+            } else {
+              const source = { uri: response.uri };
+           
+              // You can also display the image using data:
+              // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+              
+              setImageProduct(source)
+              setSelectImage(true)
+              
+              console.log(source)
+            //   this.setState({
+            //     avatarSource: source,
+            //   });
+            }
+          });
     }
 
-    const selectUrlImage = () => {
-
+    const selectCameraImage = () => {
+        ImagePicker.launchCamera(options, (response) => {
+            console.log('Response = ', response);
+           
+            if (response.didCancel) {
+              console.log('User cancelled image picker');
+            } else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+              console.log('User tapped custom button: ', response.customButton);
+            } else {
+              const source = { uri: response.uri };
+           
+              // You can also display the image using data:
+              // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+              
+              setImageProduct(source)
+              setSelectImage(true)
+              
+              console.log(source)
+            //   this.setState({
+            //     avatarSource: source,
+            //   });
+            }
+          });
     }
 
 
@@ -57,11 +111,11 @@ const createProduct = () => {
                         color='white'
                     ></Icon>
                 </TouchableOpacity>
-                <Text style={[styles.textHearder, { fontSize: 22, fontWeight: 'bold' }]}>Tạo mặt hàng</Text>
+                <Text style={[styles.textHeader, { fontSize: 22, fontWeight: 'bold' }]}>Tạo mặt hàng</Text>
                 <TouchableOpacity
                 //save
                 >
-                    <Text style={styles.textHearder} >Lưu</Text>
+                    <Text style={styles.textHeader} >Lưu</Text>
                 </TouchableOpacity>
             </View>
 
@@ -77,14 +131,22 @@ const createProduct = () => {
                 <Picker
                     selectedValue={pickerValue}
                     style={styles.picker}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setPickerValue(itemValue)
-                    }
+                    onValueChange={(itemValue, itemIndex) => {
+                        if (itemValue == 'Tạo danh mục') {
+                            console.log('Tạo danh mục')
+                        } else if (itemValue == 'Không danh mục') {
+                            setPickerValue('')
+                            console.log(pickerValue)
+                        } else {
+                            setPickerValue(itemValue)
+                            console.log(pickerValue)
+                        }
+                    }}
                     mode='dropdown'
 
                 >
                     <Picker.Item label="Không danh mục" value="Không danh mục" />
-                    <Picker.Item onPress={()=>{console.log('ok')}} label="Tạo danh mục" value="Tạo danh mục" />
+                    <Picker.Item label="Tạo danh mục" value="Tạo danh mục" />
                 </Picker>
                 <Text style={styles.textInfor}>Giá</Text>
                 <Input
@@ -102,10 +164,14 @@ const createProduct = () => {
                     errorStyle={{ color: 'red' }}
                     errorMessage={nameProduct}
                 ></Input>
-                <Text style={styles.textInfor}>Hình ảnh</Text>
+                <Text style={styles.textInfor}>Chọn hình ảnh</Text>
                 <View style={styles.image}>
 
-                    <Image style={styles.imageProduct}></Image>
+                    <Image 
+                    resizeMode='cover'
+                    source={
+                        selectImage ? imageProduct : require('../../images/backgroundImage.jpg')
+                    } style={styles.imageProduct}></Image>
 
                     <View style={styles.imageStyle}>
                         <TouchableOpacity style={{ flexDirection: 'row', marginBottom: 10 }}
@@ -118,27 +184,27 @@ const createProduct = () => {
                                 size={20}
                                 color={color.icon}
                             ></Icon>
-                            <Text style={[styles.textInfor, { color: color.gray100 }]}>Chọn hình ảnh</Text>
+                            <Text style={[styles.textInfor, { color: color.gray100 }]}>Chọn ảnh từ thư viện</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={{ flexDirection: 'row' }}
-                            onPress={() => selectUrlImage()}
+                            onPress={() => selectCameraImage()}
                         >
                             <Icon
                                 style={styles.icon}
-                                name='link'
+                                name='camera'
                                 type='entypo'
                                 size={20}
                                 color={color.icon}
                             ></Icon>
-                            <Text style={[styles.textInfor, { color: color.gray100 }]}>Chọn đường link</Text>
+                            <Text style={[styles.textInfor, { color: color.gray100 }]}>Chụp ảnh</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
 
 
-        </ScrollView>
+        </ScrollView >
     )
 }
 

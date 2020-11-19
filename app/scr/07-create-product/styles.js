@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    textHearder: {
+    textHeader: {
         color: 'white',
     },
     infor: {
@@ -55,7 +55,13 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
 
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    
 })
 
 export default styles
