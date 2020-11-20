@@ -143,7 +143,6 @@ const createProduct = () => {
                         }
                     }}
                     mode='dropdown'
-
                 >
                     <Picker.Item label="Không danh mục" value="Không danh mục" />
                     <Picker.Item label="Tạo danh mục" value="Tạo danh mục" />

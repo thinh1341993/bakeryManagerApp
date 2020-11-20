@@ -15,22 +15,17 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
+import {Provider} from 'react-redux'
+import store from './app/redux/createStore'
 
 import CreateProduct from './app/scr/07-create-product/create-product'
 import CreateCategory from './app/scr/10-create-category/create-category'
 
 const App: () => React$Node = () => {
   return (
-    <>
-      {/* <StatusBar barStyle="dark-content" /> */}
-      {/* <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          > */}
+    <Provider store={store}>
           <CreateCategory/>
-        {/* </ScrollView>
-      </SafeAreaView> */}
-    </>
+    </Provider>
   );
 };
 

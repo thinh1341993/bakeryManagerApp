@@ -12,6 +12,8 @@ target 'BakeryManager' do
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
+  pod 'react-native-progress-bar-android', :path => '../node_modules/@react-native-community/progress-bar-android'
+
   target 'BakeryManagerTests' do
     inherit! :complete
     # Pods for testing
