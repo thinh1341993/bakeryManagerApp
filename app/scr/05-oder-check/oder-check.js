@@ -6,4 +6,19 @@ import firestore from '@react-native-firebase/firestore'
 
 import { connect, useDispatch } from 'react-redux'
 
-import { View, TouchableOpacity } from "react-native"
+import { View, TouchableOpacity,Text, } from "react-native"
+
+const oderCheck =(props)=>{
+
+    return(
+        <View>
+            <Text>oderCheck{props.categoriesData[0].name}</Text>
+        </View>
+    )
+}
+
+const mapStateToProps = (state) => ({
+    categoriesData: state.categories,
+})
+
+export const OderCheckScreen =connect(mapStateToProps, null)(oderCheck)

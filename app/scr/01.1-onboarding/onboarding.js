@@ -6,13 +6,13 @@ import firestore from '@react-native-firebase/firestore'
 
 import { connect, useDispatch } from 'react-redux'
 
-import { View, TouchableOpacity, Text, } from "react-native"
+import { View, TouchableOpacity,Text } from "react-native"
 
-const editProduct = (props) => {
+const onboarding =(props)=>{
 
-    return (
-        <View>
-            <Text>editProduct</Text>
+    return(
+        <View style={{flex:1}}>
+            <Text>onboarding</Text>
         </View>
     )
 }
@@ -21,4 +21,4 @@ const mapStateToProps = (state) => ({
     categoriesData: state.categories,
 })
 
-export const EditProductScreen = connect(mapStateToProps, null)(editProduct)
+export const OnboardingScreen =connect(mapStateToProps, null)(onboarding)

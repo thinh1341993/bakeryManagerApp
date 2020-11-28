@@ -16,6 +16,14 @@ const styles = StyleSheet.create({
     },
     textHeader: {
         color: 'white',
+        fontSize: 18,
+    },
+    actionHeader: {
+
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+
     },
     infor: {
         paddingHorizontal: 16,
@@ -28,17 +36,23 @@ const styles = StyleSheet.create({
         marginHorizontal: 0,
         paddingHorizontal: 0,
     },
+    inputMask:{
+        marginHorizontal: 0,
+        paddingHorizontal: 0,
+        fontSize:17,
+        borderBottomWidth:1,
+        borderBottomColor:color.textGreen,
+        marginBottom:20
+    },
     picker: {
         height: 50,
-
         color: 'black',
-
     },
     image: {
         height: 100,
         flexDirection: 'row',
         marginTop: 20,
-        marginBottom: 30,
+        marginBottom: 15,
     },
     imageProduct: {
         width: 100,
@@ -61,7 +75,22 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    
+    colorCategory: {
+        marginTop: 10,
+        padding: 2,
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 40,
+        justifyContent: 'space-between'
+    },
+    pickColorCategory: {
+        height: distance.windowWidth * 0.16,
+        width: distance.windowWidth * 0.16,
+        margin: 5,
+        borderRadius: 8,
+        backgroundColor: 'black'
+    },
 })
 
 export default styles

@@ -15,16 +15,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     actionHeader: {
- 
-         height: '100%', 
-        justifyContent: 'center', 
+
+        height: '100%',
+        justifyContent: 'center',
         alignItems: 'center',
- 
+
     },
     textHeader: {
 
         color: 'white',
-        fontSize:18
+        fontSize: 18
     },
     infor: {
         paddingHorizontal: 16,
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 0,
         paddingHorizontal: 0,
     },
+
     picker: {
         height: 50,
 

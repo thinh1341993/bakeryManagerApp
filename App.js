@@ -7,24 +7,28 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
-import {Provider} from 'react-redux'
+import { View, Text } from 'react-native'
+import { Provider } from 'react-redux'
 import store from './app/redux/createStore'
 
-import CreateProduct from './app/scr/07-create-product/create-product'
-import CreateCategory from './app/scr/10-create-category/create-category'
+// import SplashScreen from './app/scr/01-splash/splash'
+import FlashListItem from './app/components/flash-list/flash-list-item'
+import { SplashScreen } from './app/scr/01-splash/splash'
+import { OnboardingScreen } from './app/scr/01.1-onboarding/onboarding'
+import { AuthStack } from './app/navigation/auth-navigator'
+import RootNavigator from './app/navigation/root-navigator'
+import { enableScreens } from 'react-native-screens';
 
-const App: () => React$Node = () => {
+enableScreens();
+import { NavigationContainer } from '@react-navigation/native';
+import { HomeBottomTab } from './app/navigation/primary-navigator'
+
+const App = () => {
   return (
     <Provider store={store}>
-          <CreateCategory/>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
     </Provider>
   );
 };

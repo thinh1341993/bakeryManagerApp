@@ -252,7 +252,7 @@ const createCategory = (props) => {
                     }} style={[styles.pickColorCategory, { backgroundColor: '#EE88B0' }]}></TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                         setSelectImageType(true)
-                        setImageProduct({ uri: 'https://lh3.googleusercontent.com/proxy/ar5dPo0PNzR2JeCeNRTOZY0TQYmQlgubm4TJtAqq-XGMCh9OD1I62YUBT1vTfjZXS7uJznv_rNg' })
+                        setImageProduct({ uri: 'https://www.htmlcsscolor.com/preview/gallery/FFA500.png' })
                     }} style={[styles.pickColorCategory, { backgroundColor: '#EAAE00' }]}></TouchableOpacity>
 
                     <TouchableOpacity onPress={() => {
@@ -287,4 +287,4 @@ const mapStateToProps = (state) => ({
     categoriesData: state.categories,
 })
 
-export default connect(mapStateToProps, null)(createCategory)
+export const CreateCategoryScreen= connect(mapStateToProps, null)(createCategory)
