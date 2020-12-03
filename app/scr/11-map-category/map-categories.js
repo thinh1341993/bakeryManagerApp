@@ -6,7 +6,7 @@ import firestore from '@react-native-firebase/firestore'
 
 import { connect, useDispatch } from 'react-redux'
 
-import { View, TouchableOpacity } from "react-native"
+import { View, TouchableOpacity,Text } from "react-native"
 
 const mapCategories =(props)=>{
 

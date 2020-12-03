@@ -3,17 +3,16 @@ import styles from "./styles"
 import { useNavigation } from "@react-navigation/native"
 
 import firestore from '@react-native-firebase/firestore'
-import { utils } from '@react-native-firebase/app';
 import storage from '@react-native-firebase/storage';
 
 
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 
 import { View, TouchableOpacity, ScrollView, Text, Image, Modal, } from "react-native"
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 
 import { Icon, Input } from "react-native-elements"
-import { color, distance, fontSize, typography } from "../../theme"
+import { color } from "../../theme"
 
 import ImagePicker from 'react-native-image-picker';
 
@@ -24,7 +23,7 @@ const options = {
 };
 
 const createCategory = (props) => {
-    
+    const navigation = useNavigation()
     //state
     const [nameCategory, setNameCategory] = useState('')
     const [imageProduct, setImageProduct] = useState({ uri: 'https://i.ebayimg.com/images/g/COYAAOSwrANco-hM/s-l640.jpg' })
@@ -51,60 +50,69 @@ const createCategory = (props) => {
 
     //action
     const back = () => {
-        console.log('back')
+        navigation.navigate('CategoriesScreen')
     }
 
     const save = async () => {
-        console.log(props.categoriesData)
-        // if (nameCategory == '') {
-        //     setErrorMessage('Bạn chưa nhập thông tin')
-        // } else {
-        //     setModalVisible(true)
-        //     if (selectImageType) {
-        //         try {
-        //             await firestore()
-        //                 .collection('Categories')
-        //                 .add({
-        //                     name: nameCategory,
-        //                     productId: [],
-        //                     image: imageProduct.uri,
-        //                 })
-        //                 .then(() => {
-        //                     console.log('User added!');
-        //                 });
-        //         } catch (error) {
-        //             console.log(error)
-        //         }
-        //     } else {
-        //         try {
-        //             await storage()
-        //                 .ref(`Image/categories/${nameCategory}`)
-        //                 .putFile(imageProduct.uri)
-        //                 .then(async () => {
-        //                     console.log('put ok')
-        //                     const url = await storage().ref(`Image/categories/${nameCategory}`).getDownloadURL()
-        //                     try {
-        //                         await firestore()
-        //                             .collection('Categories')
-        //                             .add({
-        //                                 name: nameCategory,
-        //                                 productId: [],
-        //                                 image: url,
-        //                             })
-        //                             .then(() => {
-        //                                 console.log('User added!');
-        //                             });
-        //                     } catch (error) {
-        //                         console.log(error)
-        //                     }
-        //                 }
-        //                 )
-        //         } catch (error) {
-        //             console.log(error)
-        //         }
-        //     }
-        //     setModalVisible(false)
-        // }
+
+        if (nameCategory == '') {
+            setErrorMessage('Bạn chưa nhập thông tin')
+        } else {
+            setModalVisible(true)
+            try {
+                await firestore()
+                    .collection('Categories')
+                    .where('name', '==', nameCategory.trim())
+                    .get()
+                    .then(async (documentSnapshot) => {
+                        let result
+                        for (let data of documentSnapshot.docs) {
+                            result = data.exists
+                        }
+                        if (result) {
+                            setErrorMessage('Thông tin đã tồn tại')
+                        } else {
+                            if (selectImageType) {
+                                await firestore()
+                                    .collection('Categories')
+                                    .add({
+                                        name: nameCategory.trim(),
+                                        total: 0,
+                                        image: imageProduct.uri,
+                                    })
+                                    .then(() => {
+                                        console.log('User added!');
+                                    });
+                                    setModalVisible(false)
+                                navigation.navigate('CategoriesScreen')
+                            } else {
+                                await storage()
+                                    .ref(`Image/categories/${nameCategory}`)
+                                    .putFile(imageProduct.uri)
+                                    .then(async () => {
+                                        const url = await storage().ref(`Image/categories/${nameCategory}`).getDownloadURL()
+                                        await firestore()
+                                            .collection('Categories')
+                                            .add({
+                                                name: nameCategory.trim(),
+                                                total: 0,
+                                                image: url,
+                                            })
+                                            .then(() => {
+                                                console.log('User added!');
+                                            });
+                                            setModalVisible(false)
+                                        navigation.navigate('CategoriesScreen')
+                                    }
+                                    )
+                            }
+                        }
+                    })
+            } catch (error) {
+                console.log(error)
+            }
+            setModalVisible(false)
+        }
     }
 
     const selectFileImage = () => {
@@ -287,4 +295,4 @@ const mapStateToProps = (state) => ({
     categoriesData: state.categories,
 })
 
-export const CreateCategoryScreen= connect(mapStateToProps, null)(createCategory)
+export const CreateCategoryScreen = connect(mapStateToProps, null)(createCategory)

@@ -28,9 +28,8 @@ const Stack = createNativeStackNavigator()
                         result.push({
                             categoriesId: data.id,
                             name: data.data().name,
-                            productId: data.data().productId,
                             image: data.data().image,
-                            total: documentSnapshot.size
+                            total: data.data().total
                         })
                     }
                     console.log(result)

@@ -24,7 +24,8 @@ const product = (props) => {
     const [searchTerm, setSearchTerm] = useState('')
     const [categoriesId, setCategoriesId] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
-    const [multiSliderValue, setMultiSliderValue] = useState([0, 1500])
+    const [multiSliderValue, setMultiSliderValue] = useState([10,2000])
+    const [minMaxSlider,setMinMaxSlider]= useState({min:10,max:3000})
     const [filterValue, setFilterValue] = useState(true)
     const [sortValue, setSortValue] = useState(true)
     const navigation = useNavigation()
@@ -48,7 +49,8 @@ const product = (props) => {
                 .onSnapshot(documentSnapshot => {
                     let result = []
                     for (let data of documentSnapshot.docs) {
-                        result.push(data.data())
+                        result.push({...data.data(),
+                            id:data.id})
                     }
                     setProductData(result)
                 })
@@ -68,7 +70,8 @@ const product = (props) => {
 
                     let result = []
                     for (let data of documentSnapshot.docs) {
-                        result.push(data.data())
+                        result.push({...data.data(),
+                            id:data.id})
                     }
                     console.log(result)
                     setProductData(result)
@@ -97,7 +100,8 @@ const product = (props) => {
                 .then(documentSnapshot => {
                     let result = []
                     for (let data of documentSnapshot.docs) {
-                        result.push(data.data())
+                        result.push({...data.data(),
+                            id:data.id})
                     }
                     console.log(result)
                     setProductData(result)
@@ -108,7 +112,7 @@ const product = (props) => {
     }
     //render
     function currencyFormat(num) {
-        return '$' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
 
 
@@ -159,7 +163,9 @@ const product = (props) => {
                                 checkedColor={color.textGreen}
                                 uncheckedColor={color.textGreen}
                                 checked={filterValue}
-                                onPress={() => setFilterValue(true)}
+                                onPress={() => {setFilterValue(true)
+                                    setMultiSliderValue([10,2000])
+                                    setMinMaxSlider({min:10,max:3000})}}
                             />
                             <CheckBox
                                 containerStyle={{ backgroundColor: 'transparent', margin: 0, borderWidth: 0, borderBottomWidth: 1, borderBottomColor: color.gray140 }}
@@ -169,7 +175,10 @@ const product = (props) => {
                                 checkedColor={color.textGreen}
                                 uncheckedColor={color.textGreen}
                                 checked={!filterValue}
-                                onPress={() => setFilterValue(false)}
+                                onPress={() => {setFilterValue(false)
+                                    setMultiSliderValue([0,400])
+                                    setMinMaxSlider({min:0,max:500})
+                                }}
                             />
                             <Text style={{ fontSize: 17, marginLeft: 16, marginTop: 8, fontWeight: 'bold' }}>Sắp xếp</Text>
                             <CheckBox
@@ -198,8 +207,8 @@ const product = (props) => {
                                     values={multiSliderValue}
                                     sliderLength={distance.windowWidth * 0.8 - 32}
                                     onValuesChange={(value) => setMultiSliderValue(value)}
-                                    min={0}
-                                    max={3000}
+                                    min={minMaxSlider.min}
+                                    max={minMaxSlider.max}
                                     step={1}
                                     allowOverlap
                                     snapped
@@ -258,8 +267,9 @@ const product = (props) => {
                         selectedValue={pickerValue}
                         style={styles.picker}
                         onValueChange={(itemValue, itemIndex) => {
-                            if (itemValue == 'Tạo danh mục') {
-                                navigation.navigate('CreateCategoryScreen')
+                            if (itemValue == 'Không danh mục') {
+                                filterCategory(itemValue)
+                                setPickerValue(itemValue)
 
                             } else if (itemValue == 'Tất cả mặt hàng') {
                                 setPickerValue(itemValue)
@@ -271,11 +281,11 @@ const product = (props) => {
                         }}
                         mode='dropdown'
                     >
-                        <Picker.Item label="Tất cả mặt hàng" value="Tất cả mặt hàng" />
-                        <Picker.Item label="Tạo danh mục" value="Tạo danh mục" />
+                        <Picker.Item key="Tất cả mặt hàng" label="Tất cả mặt hàng" value="Tất cả mặt hàng" />
+                        <Picker.Item key="Không danh mục" label="Không danh mục" value="Không danh mục" />
                         {props.categoriesData.map((item, index) => {
                             return (
-                                <Picker.Item label={item.name} value={item.categoriesId} />
+                                <Picker.Item key={index} label={item.name} value={item.categoriesId} />
                             )
                         })}
                     </Picker>
@@ -295,20 +305,23 @@ const product = (props) => {
             {/* //flash list mặt hàng */}
             <View style={{ flex: 1, paddingLeft: 16, marginTop: 8 }}>
                 <FlatList
+                    refreshing={false}
+                    onRefresh={()=>{setPickerValue('Tất cả mặt hàng')
+                    getAllProduct()}}
                     data={filteredName}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity
                                 key={index}
-                                onPress={() => { console.log(item.name) }}
+                                onPress={() => navigation.navigate('EditProductScreen',item)}
                                 style={styles.containerFL}>
                                 <Image source={{ uri: item.image }} style={styles.imageFL} />
                                 <View style={styles.centerFL}>
                                     <Text style={styles.textFL}>{item.name}</Text>
                                     <View style={{ width: '100%', height: '50%', paddingRight: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <Text style={[styles.textFL, { color: color.textgray }]}>{item.inventory} trong kho</Text>
-                                        <Text style={[styles.textFL, styles.rightFL]}>{currencyFormat(item.price)}</Text>
+                                        <Text style={[styles.textFL, styles.rightFL]}>{currencyFormat(item.price)} đ</Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
